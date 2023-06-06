@@ -4,11 +4,11 @@ import { deleteContactAct } from "redux/contactsSlice";
 import {getContacts, getFilterValue} from 'redux/selectors'
 
 const ContactList = () => {
-  const contacts = useSelector(getContacts);
+  const contactsFromState = useSelector(getContacts);
   const dispatch = useDispatch();
-
   const filterValue = useSelector(getFilterValue);
-  console.log(filterValue)
+  const normalizedFilter = filterValue.filter.toLowerCase();
+  const visibleContacts = contactsFromState.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
   
   const deleteContact = contactId => {
     dispatch(deleteContactAct(contactId))
@@ -16,7 +16,7 @@ const ContactList = () => {
 
 return (
   <ul className={css.list}>
-    {contacts.map(({name, number, id}) => {
+    {visibleContacts.map(({name, number, id}) => {
       return (
         <li key={id} className={css.listItem}>
           <p className={css.text}>
